@@ -7,8 +7,10 @@ import {ethers} from 'ethers';
 
 import {
   getMaybeFunctionForMaybeInterface,
+  getEtherscanApiUrl,
+  fetchAbi,
   maybeInterfaceToFunctionIdentifier,
-  getEtherscanApiUrl, fetchAbi,
+  PendingTransaction,
 } from '../src';
 
 const {ETHERSCAN_KEY: etherscanKey} = process.env as Readonly<{
@@ -29,9 +31,21 @@ const loadSeaportv1_1 = () => new ethers.utils.Interface(
   loadFixture({path: 'Seaport_v1_1'}),
 );
 
+const loadEthereum_5secs = () => loadFixture<readonly PendingTransaction[]>({
+  path: 'Ethereum_5secs',
+});
+
+const loadEthereum_Seaport_5secs = () => loadFixture<readonly PendingTransaction[]>({
+  path: 'Ethereum_Seaport_5secs',
+});
+
 describe('countersoiree', () => {
-  it('seaport_v11::abi', () => {
+  it('fixtures', () => {
     expect(loadSeaportv1_1()).toBeTruthy();
+    expect(loadEthereum_5secs()).toBeTruthy();
+    expect(loadEthereum_Seaport_5secs()).toBeTruthy();
+  });
+  it('seaport_v11::abi', () => {
 
     [undefined, '', null]
       .forEach(maybeInterface => expect(
