@@ -1,4 +1,7 @@
+import axios from 'axios';
 import {ethers} from 'ethers';
+
+import {EtherscanNetwork, EtherscanProps} from '../@types';
 
 const ABI_FUNCTION_PREFIX = 'function ';
 
@@ -36,4 +39,46 @@ export const getMaybeFunctionForMaybeInterface = ({
       interfaceString: maybeInterface,
     })
   );
+};
+
+export const getEtherscanApiUrl = ({
+  network = 'mainnet',
+}: {
+  readonly network?: EtherscanNetwork;
+}) => {
+  if (network === 'mainnet')
+    return 'https://api.etherscan.io/api';
+
+  return `http://api-${network}.etherscan.io/api`;
+};
+
+export const getEtherscanApiAbiUrl = ({
+  network,
+  contractAddress,
+  etherscanKey,
+}: EtherscanProps & {
+  readonly network: EtherscanNetwork;
+  readonly contractAddress: string;
+}) => `${
+  getEtherscanApiUrl({network})
+}?module=contract&action=getabi&address=${
+  contractAddress
+}&format=raw&apikey=${
+  etherscanKey
+}`;
+
+export const fetchAbi = async ({
+  network,
+  etherscanKey,
+  contractAddress,
+}: EtherscanProps & {
+  readonly contractAddress: string;
+}): Promise<ethers.utils.Interface> => {
+  const {data} = await axios.get(getEtherscanApiAbiUrl({
+    network,
+    contractAddress,
+    etherscanKey,
+  }));
+
+  return new ethers.utils.Interface(data);
 };

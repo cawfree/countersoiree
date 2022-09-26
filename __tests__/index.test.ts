@@ -5,8 +5,17 @@ import * as path from 'path';
 
 import {ethers} from 'ethers';
 
-import {getMaybeFunctionForMaybeInterface, maybeInterfaceToFunctionIdentifier} from '../src';
+import {
+  getMaybeFunctionForMaybeInterface,
+  maybeInterfaceToFunctionIdentifier,
+  getEtherscanApiUrl, fetchAbi,
+} from '../src';
 
+const {ETHERSCAN_KEY: etherscanKey} = process.env as Readonly<{
+  ETHERSCAN_KEY: string;
+}>;
+
+const OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2 = '0x00000000006c3852cbef3e08e8df289169ede581';
 const OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER = /* ethers */
   'function fulfillBasicOrder(tuple(address,uint256,uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,bytes32,uint256,bytes32,bytes32,uint256,tuple(uint256,address)[],bytes)) payable returns (bool)';
 
@@ -45,6 +54,21 @@ describe('countersoiree', () => {
         maybeInterface: OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER,
       }),
     ).toMatchSnapshot();
+  });
+  it('etherscan', async () => {
+      expect({
+        default: getEtherscanApiUrl({}),
+        mainnet: getEtherscanApiUrl({network: 'mainnet'}),
+        arbitrum: getEtherscanApiUrl({network: 'arbitrum'}),
+        arbitrum_rinkeby: getEtherscanApiUrl({network: 'arbitrum_rinkeby'}),
+      }).toMatchSnapshot();
 
+      expect(
+        await fetchAbi({
+          network: 'mainnet',
+          etherscanKey,
+          contractAddress: OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2,
+        }),
+      ).toMatchSnapshot();
   });
 });
