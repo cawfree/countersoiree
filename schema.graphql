@@ -1,0 +1,31 @@
+scalar Address
+scalar BigNumber
+scalar Data
+
+type PendingTransaction {
+  # What kind of transaction format was used, i.e. EIP-1559 transaction.
+  type: Int!
+  # The transaction hash.
+  hash: BigNumber!
+  # The EOA which initialized the transaction.
+  from: Address!
+  # The target address.
+  to: Address!
+  # The identifier of the chain. (i.e. Ethereum Mainnet = 1, etc.)
+  chainId: Int!
+  # The transaction nonce.
+  nonce: Int!
+  # The data alongside the transaction, if interacting with a contract. Else null.
+  data: Data
+  # Transaction signature.
+  r: String!
+  s: String!
+  v: Int!
+  # EIP-1559 Transaction Types.
+  gasPrice: BigNumber!
+  maxPriorityFeePerGas: BigNumber!
+  maxFeePerGas: BigNumber!
+  gasLimit: BigNumber!
+  # Value in ETH carried alongside the transaction.
+  value: BigNumber!
+}

@@ -55,6 +55,7 @@ describe('countersoiree', () => {
       }),
     ).toMatchSnapshot();
   });
+
   it('etherscan', async () => {
       expect({
         default: getEtherscanApiUrl({}),
@@ -63,12 +64,12 @@ describe('countersoiree', () => {
         arbitrum_rinkeby: getEtherscanApiUrl({network: 'arbitrum_rinkeby'}),
       }).toMatchSnapshot();
 
-      expect(
-        await fetchAbi({
-          network: 'mainnet',
-          etherscanKey,
-          contractAddress: OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2,
-        }),
-      ).toMatchSnapshot();
+      const etherscanAbi = await fetchAbi({
+        network: 'mainnet',
+        etherscanKey,
+        contractAddress: OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2,
+      });
+
+      expect(etherscanAbi).toMatchSnapshot();
   });
 });
