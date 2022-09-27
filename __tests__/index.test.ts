@@ -168,4 +168,25 @@ describe('countersoiree', () => {
         })),
     ).toMatchSnapshot();
   });
+  it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()', () => {
+    const query = gql`
+      query MyQuery {
+        pendingTransaction(
+          data: {
+            interface: "${OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER}"
+          }
+        ) {
+          hash
+        }
+      }
+    `;
+    expect(
+      loadEthereum_Seaport_5secs()
+        .map(pendingTransaction => exec({
+          abi: loadSeaportv1_1(),
+          query,
+          pendingTransaction,
+        })),
+    ).toMatchSnapshot();
+  });
 });

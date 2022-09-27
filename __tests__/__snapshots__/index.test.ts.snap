@@ -140,6 +140,53 @@ exports[`countersoiree Ethereum_Seaport_5secs:hash,data,from,to 1`] = `
 ]
 `;
 
+exports[`countersoiree Ethereum_Seaport_5secs:where#fulfillBasicOrder() 1`] = `
+[
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": {
+      "hash": "0x1786495293529f5093543241090d43e2e1741cded6cdb40b0f877e3706ef8f57",
+    },
+  },
+  {
+    "pendingTransaction": {
+      "hash": "0x9cc70cd8b9a7b86cc83543674e8b497eff65dfbc4f25b02b3068b0ae0315ce54",
+    },
+  },
+  {
+    "pendingTransaction": {
+      "hash": "0x329ef2df61964643854f5e56a841879dd6b0b3b32ce9c88866232a552951b221",
+    },
+  },
+  {
+    "pendingTransaction": {
+      "hash": "0x44d5eb39d0d5a5848f0513f02a2fa2e59340d2b50320a9c44a55f0a026c8d185",
+    },
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": {
+      "hash": "0x12d166569c81c1cbf17e0535a799c766b5fa5f2d8255c17f577b44771bb72c63",
+    },
+  },
+  {
+    "pendingTransaction": {
+      "hash": "0x08ff281df667dec03e6689ce1989669607c7f906ab12a5b9fb82ea30eb63b7a1",
+    },
+  },
+]
+`;
+
 exports[`countersoiree Ethereum_Seaport_5secs:where#to_empty 1`] = `
 [
   {
