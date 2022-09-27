@@ -3,7 +3,7 @@
 
 The goal of this project is to enable developers to easily declare expressive filters that search for specific unmined, pending transactions.
 
-There are a number of interesting applications that would be enabled via thorough inspection of the mempool, including but not limited to: profit searching, alerts generation, passive analysis, and active responses to pending transactions through higher-gas overrides.
+There are a number of interesting applications that would be enabled via thorough inspection of the mempool, including but not limited to: profit searching, alerts generation, passive analysis, and active responses to pending transactions through the dispatch of higher-gas overrides.
 
 > ⚠️ Fren, this project is still in development. Feel free to poke around, but don't get too attached.
 
