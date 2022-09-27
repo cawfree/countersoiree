@@ -59,7 +59,7 @@ query SeaportTransactions {
 }
 ```
 
-So it's a little useful to be able to watch transactions at a specific contract address (at this point we are a glorified [__event listener__](https://docs.ethers.io/v5/api/providers/provider/#Provider--events), but it'd be even better to only watch for specific function calls on the smart contract.
+So it's a little useful to be able to watch transactions at a specific contract address (at this point we are a glorified [__event listener__](https://docs.ethers.io/v5/api/providers/provider/#Provider--events)), but it'd be even better to only watch for specific function calls on the smart contract.
 
 In the following example, we specify that we only want to match on pending transactions where the data property targets the `external` `fulfillBasicOrder` function:
 
