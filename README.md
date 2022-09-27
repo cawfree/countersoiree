@@ -25,7 +25,7 @@ yarn test
 
 [`countersoiree`](https://github.com/cawfree/countersoiree) projects pending transactions in the Ethereum mempool, interpreted via a [`ethers.providers.TransactionResponse`](https://docs.ethers.io/v5/api/providers/types/), onto a corresponding [__GraphQL Schema__](./schema.graphql). In turn, this permits any pending transactions polled using [`ethers`](https://ethers.io/) into a queryable interface.
 
-#### 🧸 Basic Example
+#### 1. Basic Example
 
 We can pick fields of interest from the `pendingTransaction` collection, which uniquely identifies a single transaction from the mempool.
 
@@ -43,7 +43,7 @@ In practice, the contents of the mempool are accumulated asynchronously via WebS
 }
 ```
 
-#### 🧉 Using Filters
+#### 2. Using Filters
 
 We can filter `pendingTransaction`s using query parameters. In the example below, we can pass a `string` scalar to the `"to"` property of the entity to ensure only match on a specific target address.
 
