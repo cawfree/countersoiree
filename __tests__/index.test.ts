@@ -4,11 +4,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import {ethers} from 'ethers';
+import {gql} from 'graphql-tag';
 
 import {
+  exec,
+  fetchAbi,
   getMaybeFunctionForMaybeInterface,
   getEtherscanApiUrl,
-  fetchAbi,
   maybeInterfaceToFunctionIdentifier,
   PendingTransaction,
 } from '../src';
@@ -21,6 +23,8 @@ const OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2 = '0x00000000006c3852cbef3e08e8df289
 const OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER = /* ethers */
   'function fulfillBasicOrder(tuple(address,uint256,uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,bytes32,uint256,bytes32,bytes32,uint256,tuple(uint256,address)[],bytes)) payable returns (bool)';
 
+jest.setTimeout(30 * 1000);
+
 function loadFixture<T = unknown>({path: p}: {
   readonly path: string;
 }) {
@@ -31,10 +35,6 @@ const loadSeaportv1_1 = () => new ethers.utils.Interface(
   loadFixture({path: 'Seaport_v1_1'}),
 );
 
-const loadEthereum_5secs = () => loadFixture<readonly PendingTransaction[]>({
-  path: 'Ethereum_5secs',
-});
-
 const loadEthereum_Seaport_5secs = () => loadFixture<readonly PendingTransaction[]>({
   path: 'Ethereum_Seaport_5secs',
 });
@@ -42,9 +42,9 @@ const loadEthereum_Seaport_5secs = () => loadFixture<readonly PendingTransaction
 describe('countersoiree', () => {
   it('fixtures', () => {
     expect(loadSeaportv1_1()).toBeTruthy();
-    expect(loadEthereum_5secs()).toBeTruthy();
     expect(loadEthereum_Seaport_5secs()).toBeTruthy();
   });
+
   it('seaport_v11::abi', () => {
 
     [undefined, '', null]
@@ -85,5 +85,44 @@ describe('countersoiree', () => {
       });
 
       expect(etherscanAbi).toMatchSnapshot();
+  });
+
+  it('Ethereum_Seaport_5secs:hash', () => {
+    const query = gql`
+      {
+        pendingTransaction {
+          hash
+        }
+      }
+    `;
+    expect(
+      loadEthereum_Seaport_5secs()
+        .map(pendingTransaction => exec({
+          abi: loadSeaportv1_1(),
+          query,
+          pendingTransaction,
+        })),
+    ).toMatchSnapshot();
+  });
+
+  it('Ethereum_Seaport_5secs:hash,data,from,to', () => {
+    const query = gql`
+      {
+        pendingTransaction {
+          hash
+          data
+          from
+          to
+        }
+      }
+    `;
+    expect(
+      loadEthereum_Seaport_5secs()
+        .map(pendingTransaction => exec({
+          abi: loadSeaportv1_1(),
+          query,
+          pendingTransaction,
+        })),
+    ).toMatchSnapshot();
   });
 });

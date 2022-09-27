@@ -173,7 +173,7 @@ export const getFieldTypeNode = ({
   return type;
 };
 
-export const getSelectionSetFieldOn = async ({
+export const getSelectionSetFieldOn = ({
   abi,
   field,
   onInputValue: defaultOnInputValue,
@@ -183,7 +183,7 @@ export const getSelectionSetFieldOn = async ({
   readonly field: FieldNode;
   readonly onInputValue: unknown;
   readonly objectTypeDefinitionNode: ObjectTypeDefinitionNode;
-}): Promise<unknown> => {
+}): unknown => {
   const {selectionSet} = field;
 
   const onInputValue = get(defaultOnInputValue, field.name.value) as unknown;
