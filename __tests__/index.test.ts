@@ -170,6 +170,27 @@ describe('countersoiree', () => {
         })),
     ).toMatchSnapshot();
   });
+  it('Ethereum_Seaport_5secs:where#someInvalidFunction', () => {
+    const query = gql`
+      query MyQuery {
+        pendingTransaction(
+          data: {
+            interface: "someInvalidFunction() returns (bool doesNotExist)"
+          }
+        ) {
+          hash
+        }
+      }
+    `;
+    expect(
+      loadEthereum_Seaport_5secs()
+        .map(pendingTransaction => exec({
+          abi: loadSeaportv1_1(),
+          query,
+          pendingTransaction,
+        })),
+    ).toMatchSnapshot();
+  });
   it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()_minimal', () => {
     const query = gql`
       query MyQuery {

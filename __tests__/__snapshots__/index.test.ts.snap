@@ -234,6 +234,41 @@ exports[`countersoiree Ethereum_Seaport_5secs:where#fulfillBasicOrder()_minimal 
 ]
 `;
 
+exports[`countersoiree Ethereum_Seaport_5secs:where#someInvalidFunction 1`] = `
+[
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+  {
+    "pendingTransaction": null,
+  },
+]
+`;
+
 exports[`countersoiree Ethereum_Seaport_5secs:where#to_empty 1`] = `
 [
   {
