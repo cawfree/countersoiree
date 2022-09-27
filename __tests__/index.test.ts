@@ -19,7 +19,7 @@ const {ETHERSCAN_KEY: etherscanKey} = process.env as Readonly<{
   ETHERSCAN_KEY: string;
 }>;
 
-const OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2 = '0x00000000006c3852cbef3e08e8df289169ede581';
+const OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2 = '0x00000000006c3852cbEf3e08E8dF289169EdE581';
 const OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER = /* ethers */
   'function fulfillBasicOrder(tuple(address,uint256,uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,bytes32,uint256,bytes32,bytes32,uint256,tuple(uint256,address)[],bytes)) payable returns (bool)';
 
@@ -95,6 +95,7 @@ describe('countersoiree', () => {
         }
       }
     `;
+
     expect(
       loadEthereum_Seaport_5secs()
         .map(pendingTransaction => exec({
@@ -116,6 +117,48 @@ describe('countersoiree', () => {
         }
       }
     `;
+
+    expect(
+      loadEthereum_Seaport_5secs()
+        .map(pendingTransaction => exec({
+          abi: loadSeaportv1_1(),
+          query,
+          pendingTransaction,
+        })),
+    ).toMatchSnapshot();
+  });
+
+  it('Ethereum_Seaport_5secs:where#to_empty', () => {
+    const query = gql`
+      query MyQuery {
+        pendingTransaction(
+          to: ""
+        ) {
+          hash
+        }
+      }
+    `;
+
+    expect(
+      loadEthereum_Seaport_5secs()
+        .map(pendingTransaction => exec({
+          abi: loadSeaportv1_1(),
+          query,
+          pendingTransaction,
+        })),
+    ).toMatchSnapshot();
+  });
+  it('Ethereum_Seaport_5secs:where#to_seaport', () => {
+    const query = gql`
+      query MyQuery {
+        pendingTransaction(
+          to: "${OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2}"
+        ) {
+          hash
+        }
+      }
+    `;
+
     expect(
       loadEthereum_Seaport_5secs()
         .map(pendingTransaction => exec({
