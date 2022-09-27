@@ -22,6 +22,8 @@ const {ETHERSCAN_KEY: etherscanKey} = process.env as Readonly<{
 const OPENSEA_SEAPORT_V_1_1_ADDRESS_CREATE2 = '0x00000000006c3852cbEf3e08E8dF289169EdE581';
 const OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER = /* ethers */
   'function fulfillBasicOrder(tuple(address,uint256,uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,bytes32,uint256,bytes32,bytes32,uint256,tuple(uint256,address)[],bytes)) payable returns (bool)';
+const OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER_FULL = /* ethers */
+  'function fulfillBasicOrder(tuple(address considerationToken, uint256 considerationIdentifier, uint256 considerationAmount, address offerer, address zone, address offerToken, uint256 offerIdentifier, uint256 offerAmount, uint8 basicOrderType, uint256 startTime, uint256 endTime, bytes32 zoneHash, uint256 salt, bytes32 offererConduitKey, bytes32 fulfillerConduitKey, uint256 totalOriginalAdditionalRecipients, tuple(uint256 amount, address recipient)[] additionalRecipients, bytes signature) parameters) payable returns (bool fulfilled)';
 
 jest.setTimeout(30 * 1000);
 
@@ -168,12 +170,33 @@ describe('countersoiree', () => {
         })),
     ).toMatchSnapshot();
   });
-  it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()', () => {
+  it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()_minimal', () => {
     const query = gql`
       query MyQuery {
         pendingTransaction(
           data: {
             interface: "${OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER}"
+          }
+        ) {
+          hash
+        }
+      }
+    `;
+    expect(
+      loadEthereum_Seaport_5secs()
+        .map(pendingTransaction => exec({
+          abi: loadSeaportv1_1(),
+          query,
+          pendingTransaction,
+        })),
+    ).toMatchSnapshot();
+  });
+  it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()_full', () => {
+    const query = gql`
+      query MyQuery {
+        pendingTransaction(
+          data: {
+            interface: "${OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER_FULL}"
           }
         ) {
           hash
