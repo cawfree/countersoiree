@@ -76,5 +76,7 @@ query SeaportFulfillBasicOrderTransactions {
 }
 ```
 
+In this instance, implementors must take care to specify the function signature correctly.
+
 ## ✌️ license
 [__MIT__](./LICENSE)
