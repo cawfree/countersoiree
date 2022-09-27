@@ -7,7 +7,7 @@ There are a number of interesting applications that would be enabled via thoroug
 
 > ⚠️ Fren, this project is still in development. Feel free to poke around, but don't get too attached.
 
-### 🍝 build from sauce
+## 🍝 build from sauce
 
 To build this project, just [__clone__](https://rogerdudler.github.io/git-guide/) the repository, install dependencies and configure your environment variables for this project.
 
