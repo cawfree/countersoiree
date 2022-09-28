@@ -243,26 +243,6 @@ export const valueSatisfiesDataObjectArgumentInterfaceField = ({
   return value.startsWith(abi.getSighash(maybeFunction));
 };
 
-//// this is getting kinda ridiculous
-export const valueSatisfiesDataObjectArgumentCalldataFieldSubsetField = ({
-  calldataParameterValue,
-  field,
-  paramType,
-}: {
-  readonly calldataParameterValue: TransactionDescriptionResult;
-  readonly field: ObjectFieldNode;
-  readonly paramType: ethers.utils.ParamType /* HACK: Field is expected to exist on paramType as a child */;
-}): boolean => {
-
-  console.log(JSON.stringify({
-    calldataParameterValue,
-    field,
-    paramType,
-  }));
-
-  return false;
-};
-
 export const valueSatisfiesDataObjectArgumentCalldataFieldSubset = ({
   calldataParameterValue,
   valueNode,
@@ -275,13 +255,12 @@ export const valueSatisfiesDataObjectArgumentCalldataFieldSubset = ({
   if (valueNode.kind === Kind.OBJECT) {
     // Fields defined in the GraphQL schema that the caller wants to filter against.
     const {fields} = valueNode;
-    paramType.components
 
     return fields.reduce(
-      (res, field) => res && valueSatisfiesDataObjectArgumentCalldataFieldSubsetField({
+      (res, field) => res && valueSatisfiesDataObjectArgumentCalldataField({
         field,
-        calldataParameterValue,
-        paramType,
+        transactionDescriptionResult: calldataParameterValue,
+        inputs: paramType.components,
       }),
       true,
     );

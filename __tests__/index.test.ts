@@ -266,7 +266,7 @@ describe('countersoiree', () => {
     const {args: transactionDescriptionResult, functionFragment} = abi.parseTransaction({data});
     valueSatisfiesDataObjectArgumentCalldataField({
       transactionDescriptionResult,
-      functionFragment,
+      inputs: functionFragment.inputs,
       // @ts-ignore
       field: {"kind":"ObjectField","name":{"kind":"Name","value":"parameters"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"considerationToken"},"value":{"kind":"StringValue","value":"","block":false}}]}},
     });
