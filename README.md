@@ -81,7 +81,7 @@ In this instance, implementors must take care to specify the function signature 
 
 #### 3. Querying Calldata
 
-When we specify the `"interface"` function signature and `"to"` address of pending transactions, [`countersoiree`](https://github.com/cawfre/countersoiree)  enables us to dive a little deeper into the [calldata](https://ethereum.stackexchange.com/questions/52989/what-is-calldata) itself, where we can configure comparison filters against the individual function parameters of incoming transactions.
+When we specify the `"interface"` function signature and `"to"` address of pending transactions, [`countersoiree`](https://github.com/cawfre/countersoiree)  enables us to dive a little deeper into the [__calldata__](https://ethereum.stackexchange.com/questions/52989/what-is-calldata) itself, where we can configure comparison filters against the individual function parameters of incoming transactions.
 
 In the snippet below, let's define a query where we search for all `fulfillBasicOrder` transactions on [__Seaport__](https://etherscan.io/address/0x00000000006c3852cbef3e08e8df289169ede581) that match the `offerer` of [`cawfree.eth`](https://etherscan.io/address/cawfree.eth).
 
@@ -100,7 +100,7 @@ query FulfillBasicOrdersForOffererAddressQuery {
 }
 ```
 
-Note that on the [__Seaport ABI__](), `fulfillBasicOrder` accepts a single named argument, `"parameters"` which is a `tuple`:
+Note that on the [__Seaport ABI__](https://api.etherscan.io/api?module=contract&action=getabi&address=0x00000000006c3852cbef3e08e8df289169ede581), `fulfillBasicOrder` accepts a single named argument, `"parameters"` which is a `tuple`:
 
 ```
 function fulfillBasicOrder(tuple(address considerationToken, uint256 considerationIdentifier, uint256 considerationAmount, address offerer, address zone, address offerToken, uint256 offerIdentifier, uint256 offerAmount, uint8 basicOrderType, uint256 startTime, uint256 endTime, bytes32 zoneHash, uint256 salt, bytes32 offererConduitKey, bytes32 fulfillerConduitKey, uint256 totalOriginalAdditionalRecipients, tuple(uint256 amount, address recipient)[] additionalRecipients, bytes signature) parameters) payable returns (bool fulfilled)
