@@ -8,7 +8,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "watch:fbo": "npx ts-node scripts/watch:fbo"
   },
   "jest": {
     "preset": "ts-jest",

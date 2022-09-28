@@ -524,7 +524,9 @@ export const exec = ({
   readonly abi: ethers.utils.Interface;
   readonly pendingTransaction: PendingTransaction;
   readonly query: DocumentNode;
-}) => {
+}): Readonly<{
+  pendingTransaction: Partial<PendingTransaction> | null
+}> => {
   const {queryDefinitions} = getQueryDefinitions(query);
   return Object.assign(
    {},
