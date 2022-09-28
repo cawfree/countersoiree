@@ -83,7 +83,7 @@ In this instance, implementors must take care to specify the function signature 
 
 When we specify the `"interface"` function signature and `"to"` address of pending transactions, [`countersoiree`](https://github.com/cawfre/countersoiree)  enables us to dive a little deeper into the [__calldata__](https://ethereum.stackexchange.com/questions/52989/what-is-calldata) itself, where we can configure comparison filters against the individual function parameters of incoming transactions.
 
-In the snippet below, let's define a query where we search for all `fulfillBasicOrder` transactions on [__Seaport__](https://etherscan.io/address/0x00000000006c3852cbef3e08e8df289169ede581) that match the `offerer` of [`cawfree.eth`](https://etherscan.io/address/cawfree.eth).
+In the snippet below, let's define a query where we search for all `fulfillBasicOrder` transactions on [__Seaport__](https://etherscan.io/address/0x00000000006c3852cbef3e08e8df289169ede581) that match the `offerer` of [`cawfree.eth`](https://etherscan.io/address/cawfree.eth):
 
 ```graphql
 query FulfillBasicOrdersForOffererAddressQuery {
