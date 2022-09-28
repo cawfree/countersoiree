@@ -234,54 +234,28 @@ describe('countersoiree', () => {
     ).toMatchSnapshot();
   });
 
-  it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()_full:considerationToken:match', () => {
-    const fulfillBasicOrder = loadEthereum_Seaport_5secs()[1];
-
-    // Matching considerationToken address.
-    expect(
-      exec({
-        abi: loadSeaportv1_1(),
-        pendingTransaction: fulfillBasicOrder,
-        query: gql`
-          query MyQuery {
-            pendingTransaction(
-              data: {
-                interface: "${OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER_FULL}"
-                parameters: {
-                  considerationToken: "0x0000000000000000000000000000000000000000"
-                }
-              }
-            ) {
-              data
+  it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()_full:considerationToken', () => {
+    const query = gql`
+      query MyQuery {
+        pendingTransaction(
+          data: {
+            interface: "${OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER_FULL}"
+            parameters: {
+              considerationToken: "0x0000000000000000000000000000000000000000"
             }
           }
-        `,
-      }),
-    ).toMatchSnapshot();
+        ) {
+          data
+        }
+      }
+    `;
+     expect(
+       loadEthereum_Seaport_5secs()
+         .map(pendingTransaction => exec({
+           abi: loadSeaportv1_1(),
+           query,
+           pendingTransaction,
+         })),
+     ).toMatchSnapshot();
   });
-    it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()_full:considerationToken:no-match', () => {
-      const fulfillBasicOrder = loadEthereum_Seaport_5secs()[1];
-
-      // Matching considerationToken address.
-      expect(
-        exec({
-          abi: loadSeaportv1_1(),
-          pendingTransaction: fulfillBasicOrder,
-          query: gql`
-            query MyQuery {
-              pendingTransaction(
-                data: {
-                  interface: "${OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER_FULL}"
-                  parameters: {
-                    considerationToken: "0x0000000000000000000000000000000000000001"
-                  }
-                }
-              ) {
-                data
-              }
-            }
-          `,
-        }),
-      ).toMatchSnapshot();
-    });
 });
