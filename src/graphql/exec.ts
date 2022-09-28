@@ -11,7 +11,7 @@ import {
   ArgumentNode,
   FieldDefinitionNode,
   ObjectValueNode,
-  ObjectFieldNode, ValueNode,
+  ObjectFieldNode, ValueNode, StringValueNode,
 } from 'graphql';
 import get from 'lodash.get';
 
@@ -243,6 +243,32 @@ export const valueSatisfiesDataObjectArgumentInterfaceField = ({
   return value.startsWith(abi.getSighash(maybeFunction));
 };
 
+export const valueSatisfiesDataObjectArgumentCalldataFieldSubsetStringValue = ({
+  stringValueNode,
+  calldataParameterValue,
+  paramType,
+}: {
+  readonly calldataParameterValue: unknown;
+  readonly stringValueNode: StringValueNode;
+  readonly paramType: ethers.utils.ParamType;
+}): boolean => {
+
+  if (typeof calldataParameterValue !== 'string')
+    throw new Error(`Expected string calldataParameterValue, encountered "${
+      String(calldataParameterValue)
+    }".`);
+
+  const {type} = paramType;
+
+  // TODO: Extract to some generalized address handler
+  if (type === 'address')
+    return ethers.utils.getAddress(calldataParameterValue) === ethers.utils.getAddress(stringValueNode.value);
+
+  throw new Error(`Encountered unexpected paramType, "${
+    String(type)
+  }".`);
+}
+
 export const valueSatisfiesDataObjectArgumentCalldataFieldSubset = ({
   calldataParameterValue,
   valueNode,
@@ -264,6 +290,12 @@ export const valueSatisfiesDataObjectArgumentCalldataFieldSubset = ({
       }),
       true,
     );
+  } else if (valueNode.kind === Kind.STRING) {
+    return valueSatisfiesDataObjectArgumentCalldataFieldSubsetStringValue({
+      calldataParameterValue,
+      stringValueNode: valueNode,
+      paramType,
+    });
   }
 
   throw new Error(`Encountered unexpected ValueNode Kind, "${
