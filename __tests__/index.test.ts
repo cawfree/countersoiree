@@ -7,12 +7,13 @@ import {ethers} from 'ethers';
 import {gql} from 'graphql-tag';
 
 import {
-  exec,
-  fetchAbi,
-  getMaybeFunctionForMaybeInterface,
-  getEtherscanApiUrl,
-  maybeInterfaceToFunctionIdentifier,
-  PendingTransaction,
+    exec,
+    fetchAbi,
+    getMaybeFunctionForMaybeInterface,
+    getEtherscanApiUrl,
+    maybeInterfaceToFunctionIdentifier,
+    PendingTransaction,
+    valueSatisfiesDataObjectArgumentCalldataField,
 } from '../src';
 
 const {ETHERSCAN_KEY: etherscanKey} = process.env as Readonly<{
@@ -232,5 +233,42 @@ describe('countersoiree', () => {
           pendingTransaction,
         })),
     ).toMatchSnapshot();
+  });
+
+  //it('Ethereum_Seaport_5secs:where#fulfillBasicOrder()_full:considerationToken', () => {
+  //  const fulfillBasicOrder = loadEthereum_Seaport_5secs()[1];
+  //  const query = gql`
+  //    query MyQuery {
+  //      pendingTransaction(
+  //        data: {
+  //          interface: "${OPENSEA_SEAPORT_V_1_1_FULFILL_BASIC_ORDER_FULL}"
+  //          # Arguments via Calldata
+  //          parameters: {
+  //            considerationToken: ""
+  //          }
+  //        }
+  //      ) {
+  //        data
+  //      }
+  //    }
+  //  `;
+
+  //  exec({
+  //    abi: loadSeaportv1_1(),
+  //    query,
+  //    pendingTransaction: fulfillBasicOrder,
+  //  });
+  //});
+
+  it('valueSatisfiesDataObjectArgumentCalldataField', () => {
+    const abi = loadSeaportv1_1();
+    const {data} = loadEthereum_Seaport_5secs()[1];
+    const {args: transactionDescriptionResult, functionFragment} = abi.parseTransaction({data});
+    valueSatisfiesDataObjectArgumentCalldataField({
+      transactionDescriptionResult,
+      functionFragment,
+      // @ts-ignore
+      field: {"kind":"ObjectField","name":{"kind":"Name","value":"parameters"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"considerationToken"},"value":{"kind":"StringValue","value":"","block":false}}]}},
+    });
   });
 });

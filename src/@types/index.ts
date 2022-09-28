@@ -14,3 +14,8 @@ export type EtherscanProps = {
 };
 
 export type PendingTransaction = ethers.providers.TransactionResponse;
+
+export type TransactionDescriptionResult = ethers.utils.TransactionDescription['args'];
+
+export type EthersFunctionParameters = readonly ethers.utils.ParamType[];
+//export type FunctionFragmentInputs = ethers.utils.FunctionFragment['inputs'];

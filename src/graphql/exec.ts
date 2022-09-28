@@ -11,14 +11,18 @@ import {
   ArgumentNode,
   FieldDefinitionNode,
   ObjectValueNode,
-  ObjectFieldNode,
+  ObjectFieldNode, ValueNode,
 } from 'graphql';
 import get from 'lodash.get';
 
-import {PendingTransaction} from '../@types';
-
 import schema from '../../schema.graphql';
-import {getMaybeFunctionForMaybeInterface} from "../ethereum";
+
+import {
+  EthersFunctionParameters,
+  PendingTransaction,
+  TransactionDescriptionResult,
+} from '../@types';
+import {getMaybeFunctionForMaybeInterface} from '../ethereum';
 
 export const getObjectTypeDefinitionByName = ({
   name,
@@ -239,15 +243,103 @@ export const valueSatisfiesDataObjectArgumentInterfaceField = ({
   return value.startsWith(abi.getSighash(maybeFunction));
 };
 
+//// this is getting kinda ridiculous
+export const valueSatisfiesDataObjectArgumentCalldataFieldSubsetField = ({
+  calldataParameterValue,
+  field,
+  paramType,
+}: {
+  readonly calldataParameterValue: TransactionDescriptionResult;
+  readonly field: ObjectFieldNode;
+  readonly paramType: ethers.utils.ParamType /* HACK: Field is expected to exist on paramType as a child */;
+}): boolean => {
+
+  console.log(JSON.stringify({
+    calldataParameterValue,
+    field,
+    paramType,
+  }));
+
+  return false;
+};
+
+export const valueSatisfiesDataObjectArgumentCalldataFieldSubset = ({
+  calldataParameterValue,
+  valueNode,
+  paramType,
+}: {
+  readonly calldataParameterValue: TransactionDescriptionResult;
+  readonly valueNode: ValueNode;
+  readonly paramType: ethers.utils.ParamType;
+}): boolean => {
+  if (valueNode.kind === Kind.OBJECT) {
+    // Fields defined in the GraphQL schema that the caller wants to filter against.
+    const {fields} = valueNode;
+    paramType.components
+
+    return fields.reduce(
+      (res, field) => res && valueSatisfiesDataObjectArgumentCalldataFieldSubsetField({
+        field,
+        calldataParameterValue,
+        paramType,
+      }),
+      true,
+    );
+  }
+
+  throw new Error(`Encountered unexpected ValueNode Kind, "${
+    String(valueNode.kind)
+  }".`);
+};
+
+export const valueSatisfiesDataObjectArgumentCalldataField = ({
+  transactionDescriptionResult,
+  inputs,
+  field,
+}: {
+  readonly transactionDescriptionResult: TransactionDescriptionResult;
+  readonly inputs: EthersFunctionParameters;
+  readonly field: ObjectFieldNode;
+}): boolean => {
+
+  // Else, these are function parameters we intend to query against.
+  const parameterName = field?.name?.value;
+
+  if (typeof parameterName !== 'string' || !parameterName.length)
+    throw new Error(`Expected non-empty string functionParameterName, encountered "${
+        String(parameterName)
+    }".`);
+
+  const maybeParamType = inputs.find(e => e.name === parameterName);
+
+  // The matching input could not be found.
+  if (!maybeParamType) return false;
+
+  const calldataParameterValue = transactionDescriptionResult[inputs.indexOf(maybeParamType)] as TransactionDescriptionResult;
+
+  return valueSatisfiesDataObjectArgumentCalldataFieldSubset({
+    calldataParameterValue,
+    valueNode: field.value,
+    paramType: maybeParamType,
+  });
+};
+
 export const valueSatisfiesDataObjectArgumentField = ({
   abi,
   field,
   value,
+  transactionDescriptionResult,
+  functionFragment,
 }: {
   readonly abi: ethers.utils.Interface;
   readonly field: ObjectFieldNode;
   readonly value: string;
+  readonly transactionDescriptionResult: TransactionDescriptionResult;
+  readonly functionFragment: ethers.utils.FunctionFragment;
+  //readonly transactionDescription: ethers.utils.TransactionDescription;
 }): boolean => {
+  // HACK: This is a reserved field. We should probably use a naming convention
+  //       which is less likely to conflict with existing contracts.
   if (field.name.value === 'interface')
     return valueSatisfiesDataObjectArgumentInterfaceField({
       abi,
@@ -255,7 +347,13 @@ export const valueSatisfiesDataObjectArgumentField = ({
       value,
     });
 
-  return false;
+  const {inputs} = functionFragment;
+
+  return valueSatisfiesDataObjectArgumentCalldataField({
+    transactionDescriptionResult,
+    inputs,
+    field,
+  });
 };
 
 export const valueSatisfiesDataObjectArgument = ({
@@ -271,6 +369,18 @@ export const valueSatisfiesDataObjectArgument = ({
   if (typeof value !== 'string')
     throw new Error(`Expected string transaction data, encountered ${typeof value}.`);
 
+  const transactionDescription = abi
+    .parseTransaction({data: value});
+
+  if (!transactionDescription)
+    throw new Error(`Expected transaction description, encountered "${
+      String(transactionDescription)
+    }".`);
+
+  const {
+    args: transactionDescriptionResult,
+    functionFragment,
+  } = transactionDescription;
   const {fields} = objectValueNode;
 
   return fields.reduce<boolean>(
@@ -278,6 +388,8 @@ export const valueSatisfiesDataObjectArgument = ({
       abi,
       field,
       value,
+      transactionDescriptionResult,
+      functionFragment,
     }),
     true,
   );
