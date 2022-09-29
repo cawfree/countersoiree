@@ -91,7 +91,7 @@ query FulfillBasicOrdersForOffererAddressQuery {
     data: {
       interface: "function fulfillBasicOrder(tuple(address considerationToken, uint256 considerationIdentifier, uint256 considerationAmount, address offerer, address zone, address offerToken, uint256 offerIdentifier, uint256 offerAmount, uint8 basicOrderType, uint256 startTime, uint256 endTime, bytes32 zoneHash, uint256 salt, bytes32 offererConduitKey, bytes32 fulfillerConduitKey, uint256 totalOriginalAdditionalRecipients, tuple(uint256 amount, address recipient)[] additionalRecipients, bytes signature) parameters) payable returns (bool fulfilled)"
       parameters: {
-        offererAddress: "0x312e71162Df834A87a2684d30562b94816b0f072"
+        offerer: "0x312e71162Df834A87a2684d30562b94816b0f072"
       }
     }
   ) {
@@ -106,11 +106,11 @@ Note that on the [__Seaport ABI__](https://api.etherscan.io/api?module=contract&
 function fulfillBasicOrder(tuple(address considerationToken, uint256 considerationIdentifier, uint256 considerationAmount, address offerer, address zone, address offerToken, uint256 offerIdentifier, uint256 offerAmount, uint8 basicOrderType, uint256 startTime, uint256 endTime, bytes32 zoneHash, uint256 salt, bytes32 offererConduitKey, bytes32 fulfillerConduitKey, uint256 totalOriginalAdditionalRecipients, tuple(uint256 amount, address recipient)[] additionalRecipients, bytes signature) parameters) payable returns (bool fulfilled)
 ```
 
-Therefore, when we attempt to filter against `offerer` in our query, we are filtering on the nested field `"offererAddress"` of the `tuple` `"parameters"`, thus yielding:
+Therefore, when we attempt to filter against `offerer` in our query, we are filtering on the nested field `"offerer"` of the `tuple` `"parameters"`, thus yielding:
 
 ```graphql
 parameters: {
-  offererAddress: "0x312e71162Df834A87a2684d30562b94816b0f072"
+  address: "0x312e71162Df834A87a2684d30562b94816b0f072"
 }
 ```
 

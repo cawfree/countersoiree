@@ -34,7 +34,7 @@ if (typeof maybeWssProviderUri !== 'string' || !maybeWssProviderUri.length)
 
 void (async () => {
   try {
-    const offererAddress = ethers.utils.getAddress(maybeOffererAddress);
+    const offerer = ethers.utils.getAddress(maybeOffererAddress);
 
     const player = Player({});
     const convenience = () => player.play('assets/mp3/convenience.mp3');
@@ -49,7 +49,7 @@ void (async () => {
           data: {
             interface: "function fulfillBasicOrder(tuple(address considerationToken, uint256 considerationIdentifier, uint256 considerationAmount, address offerer, address zone, address offerToken, uint256 offerIdentifier, uint256 offerAmount, uint8 basicOrderType, uint256 startTime, uint256 endTime, bytes32 zoneHash, uint256 salt, bytes32 offererConduitKey, bytes32 fulfillerConduitKey, uint256 totalOriginalAdditionalRecipients, tuple(uint256 amount, address recipient)[] additionalRecipients, bytes signature) parameters) payable returns (bool fulfilled)"
             parameters: {
-              offerer: "${offererAddress}"
+              offerer: "${offerer}"
             }
           }
         ) {
