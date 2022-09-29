@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import * as fs from 'fs';
 import * as path from 'path';
+import Player from 'play-sound';
 
 import {ethers} from 'ethers';
 import {gql} from 'graphql-tag';
@@ -35,6 +36,9 @@ void (async () => {
   try {
     const offererAddress = ethers.utils.getAddress(maybeOffererAddress);
 
+    const player = Player({});
+    const convenience = () => player.play('assets/mp3/convenience.mp3');
+
     const provider: ethers.providers.WebSocketProvider =
       new ethers.providers.WebSocketProvider(maybeWssProviderUri);
 
@@ -49,7 +53,7 @@ void (async () => {
             }
           }
         ) {
-          data
+          hash
         }
       }
     `;
@@ -66,7 +70,10 @@ void (async () => {
 
         if (!maybeResult) return;
 
-        console.log(maybeResult);
+        const {hash} = maybeResult;
+
+        console.log(`👀 https://etherscan.io/tx/${hash}`);
+        convenience();
       },
     });
 
