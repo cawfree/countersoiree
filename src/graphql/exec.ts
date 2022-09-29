@@ -89,15 +89,18 @@ export const resultSatisfiesArguments = ({
   readonly args: readonly ArgumentNode[];
   readonly result: unknown;
 }): boolean => {
-  const results = args.map(
-    argument => resultSatisfiesArgument({
-      abi,
-      typeNode,
-      argument,
-      result,
-    }),
+  return args.reduce<boolean>(
+    (e, argument) => {
+      if (!e) return false;
+      return resultSatisfiesArgument({
+        abi,
+        typeNode,
+        argument,
+        result,
+      });
+    },
+    true,
   );
-  return results.filter(e => !e).length === 0;
 };
 
 export const handleSelectionSet = ({
@@ -528,6 +531,7 @@ export const exec = ({
   pendingTransaction: Partial<PendingTransaction> | null
 }> => {
   const {queryDefinitions} = getQueryDefinitions(query);
+
   return Object.assign(
    {},
     ...Object
